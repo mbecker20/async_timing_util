@@ -1,5 +1,6 @@
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
 pub const FIVE_MIN_MS: u128 = ONE_MIN_MS * 5;
 pub const TEN_MIN_MS: u128 = FIVE_MIN_MS * 2;
@@ -21,6 +22,12 @@ pub async fn wait_until(target_ts_ms: u128) {
         panic!("provided target ts is before the current time");
     }
     let time_to_wait = target_ts_ms - ts;
+    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+}
+
+pub async fn wait_until_next_30_sec(additional_ms: u128) {
+    let ts = unix_timestamp_ms();
+    let time_to_wait = THIRTY_SECONDS_MS - ts % THIRTY_SECONDS_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
 }
 
