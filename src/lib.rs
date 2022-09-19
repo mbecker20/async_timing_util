@@ -16,25 +16,34 @@ pub fn unix_timestamp_ms() -> u128 {
         .as_millis()
 }
 
-pub async fn wait_until(target_ts_ms: u128) {
+pub async fn wait_until(target_ts_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     if target_ts_ms < ts {
         panic!("provided target ts is before the current time");
     }
     let time_to_wait = target_ts_ms - ts;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
-pub async fn wait_until_next_30_sec(additional_ms: u128) {
+pub async fn wait_until_next_30_sec(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = THIRTY_SECONDS_MS - ts % THIRTY_SECONDS_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
-pub async fn wait_until_next_1_min(additional_ms: u128) {
+pub fn last_30_sec_interval() -> (u128, u128) {
+    let ts = unix_timestamp_ms();
+    let end = ts - ts % THIRTY_SECONDS_MS;
+    (end - THIRTY_SECONDS_MS, end)
+}
+
+pub async fn wait_until_next_1_min(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = ONE_MIN_MS - ts % ONE_MIN_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_1_min_interval() -> (u128, u128) {
@@ -43,10 +52,11 @@ pub fn last_1_min_interval() -> (u128, u128) {
     (end - ONE_MIN_MS, end)
 }
 
-pub async fn wait_until_next_5_min(additional_ms: u128) {
+pub async fn wait_until_next_5_min(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = FIVE_MIN_MS - ts % FIVE_MIN_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_5_min_interval() -> (u128, u128) {
@@ -55,10 +65,11 @@ pub fn last_5_min_interval() -> (u128, u128) {
     (end - FIVE_MIN_MS, end)
 }
 
-pub async fn wait_until_next_10_min(additional_ms: u128) {
+pub async fn wait_until_next_10_min(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = TEN_MIN_MS - ts % TEN_MIN_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_10_min_interval() -> (u128, u128) {
@@ -67,10 +78,11 @@ pub fn last_10_min_interval() -> (u128, u128) {
     (end - TEN_MIN_MS, end)
 }
 
-pub async fn wait_until_next_15_min(additional_ms: u128) {
+pub async fn wait_until_next_15_min(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = FIFTEEN_MIN_MS - ts % FIFTEEN_MIN_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_15_min_interval() -> (u128, u128) {
@@ -79,10 +91,11 @@ pub fn last_15_min_interval() -> (u128, u128) {
     (end - FIFTEEN_MIN_MS, end)
 }
 
-pub async fn wait_until_next_30_min(additional_ms: u128) {
+pub async fn wait_until_next_30_min(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = THIRTY_MIN_MS - ts % THIRTY_MIN_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_30_min_interval() -> (u128, u128) {
@@ -91,10 +104,11 @@ pub fn last_30_min_interval() -> (u128, u128) {
     (end - THIRTY_MIN_MS, end)
 }
 
-pub async fn wait_until_next_hour(additional_ms: u128) {
+pub async fn wait_until_next_hour(additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let time_to_wait = ONE_HOUR_MS - ts % ONE_HOUR_MS + additional_ms;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
 }
 
 pub fn last_hour_interval() -> (u128, u128) {
