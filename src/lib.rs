@@ -3,11 +3,13 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
 pub const FIVE_MIN_MS: u128 = ONE_MIN_MS * 5;
-pub const TEN_MIN_MS: u128 = FIVE_MIN_MS * 2;
-pub const FIFTEEN_MIN_MS: u128 = FIVE_MIN_MS * 3;
-pub const THIRTY_MIN_MS: u128 = FIFTEEN_MIN_MS * 2;
-pub const ONE_HOUR_MS: u128 = THIRTY_MIN_MS * 3;
-pub const DAY_MS: u128 = ONE_HOUR_MS * 24;
+pub const TEN_MIN_MS: u128 = ONE_MIN_MS * 10;
+pub const FIFTEEN_MIN_MS: u128 = ONE_MIN_MS * 15;
+pub const THIRTY_MIN_MS: u128 = ONE_MIN_MS * 30;
+pub const ONE_HOUR_MS: u128 = ONE_MIN_MS * 60;
+pub const SIX_HOURS_MS: u128 = ONE_HOUR_MS * 6;
+pub const TWELVE_HOURS_MS: u128 = ONE_HOUR_MS * 12;
+pub const ONE_DAY_MS: u128 = ONE_HOUR_MS * 24;
 
 pub fn unix_timestamp_ms() -> u128 {
     SystemTime::now()
@@ -115,4 +117,43 @@ pub fn last_hour_interval() -> (u128, u128) {
     let ts = unix_timestamp_ms();
     let end = ts - ts % ONE_HOUR_MS;
     (end - ONE_HOUR_MS, end)
+}
+
+pub async fn wait_until_next_6_hour(additional_ms: u128) -> u128 {
+    let ts = unix_timestamp_ms();
+    let time_to_wait = SIX_HOURS_MS - ts % SIX_HOURS_MS + additional_ms;
+    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
+}
+
+pub fn last_6_hour_interval() -> (u128, u128) {
+    let ts = unix_timestamp_ms();
+    let end = ts - ts % SIX_HOURS_MS;
+    (end - SIX_HOURS_MS, end)
+}
+
+pub async fn wait_until_next_12_hour(additional_ms: u128) -> u128 {
+    let ts = unix_timestamp_ms();
+    let time_to_wait = TWELVE_HOURS_MS - ts % TWELVE_HOURS_MS + additional_ms;
+    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
+}
+
+pub fn last_12_hour_interval() -> (u128, u128) {
+    let ts = unix_timestamp_ms();
+    let end = ts - ts % TWELVE_HOURS_MS;
+    (end - TWELVE_HOURS_MS, end)
+}
+
+pub async fn wait_until_next_day(additional_ms: u128) -> u128 {
+    let ts = unix_timestamp_ms();
+    let time_to_wait = ONE_DAY_MS - ts % ONE_DAY_MS + additional_ms;
+    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+    ts + time_to_wait
+}
+
+pub fn last_day_interval() -> (u128, u128) {
+    let ts = unix_timestamp_ms();
+    let end = ts - ts % ONE_DAY_MS;
+    (end - ONE_DAY_MS, end)
 }
