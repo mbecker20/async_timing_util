@@ -1,4 +1,22 @@
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use serde_derive::{Serialize, Deserialize};
+use strum_macros::{Display, EnumString};
+
+#[derive(Serialize, Deserialize, Debug, Display, EnumString, PartialEq, Hash, Eq, Clone, Copy)]
+#[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
+pub enum Timelength {
+    ThirtySeconds,
+    OneMinute,
+    FiveMinutes,
+    TenMinutes,
+    FifteenMinutes,
+    ThirtyMinutes,
+    OneHour,
+    SixHours,
+    TwelveHours,
+    OneDay,
+}
 
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
@@ -26,6 +44,21 @@ pub async fn wait_until(target_ts_ms: u128) -> u128 {
     let time_to_wait = target_ts_ms - ts;
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
     ts + time_to_wait
+}
+
+pub async fn wait_until_timelength(timelength: Timelength, additional_ms: u128) -> u128 {
+    match timelength {
+        Timelength::ThirtySeconds => wait_until_next_30_min(additional_ms).await,
+        Timelength::OneMinute => wait_until_next_1_min(additional_ms).await,
+        Timelength::FiveMinutes => wait_until_next_5_min(additional_ms).await,
+        Timelength::TenMinutes => wait_until_next_10_min(additional_ms).await,
+        Timelength::FifteenMinutes => wait_until_next_15_min(additional_ms).await,
+        Timelength::ThirtyMinutes => wait_until_next_30_min(additional_ms).await,
+        Timelength::OneHour => wait_until_next_hour(additional_ms).await,
+        Timelength::SixHours => wait_until_next_6_hour(additional_ms).await,
+        Timelength::TwelveHours => wait_until_next_12_hour(additional_ms).await,
+        Timelength::OneDay => wait_until_next_day(additional_ms).await,
+    }
 }
 
 pub async fn wait_until_next_30_sec(additional_ms: u128) -> u128 {
