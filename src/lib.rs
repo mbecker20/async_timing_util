@@ -22,10 +22,16 @@ pub enum Timelength {
     OneHour,
     #[serde(rename = "6-hr")]
     SixHours,
+    #[serde(rename = "8-hr")]
+    EightHours,
     #[serde(rename = "12-hr")]
     TwelveHours,
     #[serde(rename = "1-day")]
     OneDay,
+    #[serde(rename = "3-day")]
+    ThreeDay,
+    #[serde(rename = "1-wk")]
+    OneWeek,
 }
 
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
@@ -36,8 +42,11 @@ pub const FIFTEEN_MIN_MS: u128 = ONE_MIN_MS * 15;
 pub const THIRTY_MIN_MS: u128 = ONE_MIN_MS * 30;
 pub const ONE_HOUR_MS: u128 = ONE_MIN_MS * 60;
 pub const SIX_HOURS_MS: u128 = ONE_HOUR_MS * 6;
+pub const EIGHT_HOURS_MS: u128 = ONE_HOUR_MS * 8;
 pub const TWELVE_HOURS_MS: u128 = ONE_HOUR_MS * 12;
 pub const ONE_DAY_MS: u128 = ONE_HOUR_MS * 24;
+pub const THREE_DAY_MS: u128 = ONE_DAY_MS * 3;
+pub const ONE_WEEK_MS: u128 = ONE_DAY_MS * 7;
 
 pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
     match timelength {
@@ -49,8 +58,11 @@ pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
         Timelength::ThirtyMinutes => THIRTY_MIN_MS,
         Timelength::OneHour => ONE_HOUR_MS,
         Timelength::SixHours => SIX_HOURS_MS,
+        Timelength::EightHours => EIGHT_HOURS_MS,
         Timelength::TwelveHours => TWELVE_HOURS_MS,
         Timelength::OneDay => ONE_DAY_MS,
+        Timelength::ThreeDay => THREE_DAY_MS,
+        Timelength::OneWeek => ONE_WEEK_MS,
     }
 }
 
