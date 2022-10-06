@@ -6,15 +6,25 @@ use strum_macros::{Display, EnumString};
 #[serde(rename_all = "snake_case")]
 #[strum(serialize_all = "snake_case")]
 pub enum Timelength {
+    #[serde(rename = "30-sec")]
     ThirtySeconds,
+    #[serde(rename = "1-min")]
     OneMinute,
+    #[serde(rename = "5-min")]
     FiveMinutes,
+    #[serde(rename = "10-min")]
     TenMinutes,
+    #[serde(rename = "15-min")]
     FifteenMinutes,
+    #[serde(rename = "30-min")]
     ThirtyMinutes,
+    #[serde(rename = "1-hr")]
     OneHour,
+    #[serde(rename = "6-hr")]
     SixHours,
+    #[serde(rename = "12-hr")]
     TwelveHours,
+    #[serde(rename = "1-day")]
     OneDay,
 }
 
