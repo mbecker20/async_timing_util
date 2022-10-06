@@ -69,7 +69,7 @@ pub async fn wait_until_timelength(timelength: Timelength, additional_ms: u128) 
     ts + time_to_wait
 }
 
-pub async fn last_timelength_interval(timelength: Timelength) -> (u128, u128) {
+pub fn last_timelength_interval(timelength: Timelength) -> (u128, u128) {
     let ts = unix_timestamp_ms();
     let timelength = get_timelength_in_ms(timelength);
     let end = ts - ts % timelength;

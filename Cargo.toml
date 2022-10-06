@@ -1,6 +1,6 @@
 [package]
 name = "async_timing_util"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 description = "tokio async functions for waiting until even intervals (on 1 min, 5 min, 30 min, etc), or waiting until a specified timestamp"
 license = "MIT"
