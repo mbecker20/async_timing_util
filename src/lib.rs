@@ -10,6 +10,8 @@ pub enum Timelength {
     ThirtySeconds,
     #[serde(rename = "1-min")]
     OneMinute,
+    #[serde(rename = "2-min")]
+    TwoMinutes,
     #[serde(rename = "5-min")]
     FiveMinutes,
     #[serde(rename = "10-min")]
@@ -20,6 +22,8 @@ pub enum Timelength {
     ThirtyMinutes,
     #[serde(rename = "1-hr")]
     OneHour,
+    #[serde(rename = "2-hr")]
+    TwoHours,
     #[serde(rename = "6-hr")]
     SixHours,
     #[serde(rename = "8-hr")]
@@ -36,11 +40,13 @@ pub enum Timelength {
 
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
+pub const TWO_MIN_MS: u128 = 1000 * 120;
 pub const FIVE_MIN_MS: u128 = ONE_MIN_MS * 5;
 pub const TEN_MIN_MS: u128 = ONE_MIN_MS * 10;
 pub const FIFTEEN_MIN_MS: u128 = ONE_MIN_MS * 15;
 pub const THIRTY_MIN_MS: u128 = ONE_MIN_MS * 30;
 pub const ONE_HOUR_MS: u128 = ONE_MIN_MS * 60;
+pub const TWO_HOUR_MS: u128 = ONE_HOUR_MS * 2;
 pub const SIX_HOURS_MS: u128 = ONE_HOUR_MS * 6;
 pub const EIGHT_HOURS_MS: u128 = ONE_HOUR_MS * 8;
 pub const TWELVE_HOURS_MS: u128 = ONE_HOUR_MS * 12;
@@ -52,11 +58,13 @@ pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
     match timelength {
         Timelength::ThirtySeconds => THIRTY_SECONDS_MS,
         Timelength::OneMinute => ONE_MIN_MS,
+        Timelength::TwoMinutes => TWO_MIN_MS,
         Timelength::FiveMinutes => FIVE_MIN_MS,
         Timelength::TenMinutes => TEN_MIN_MS,
         Timelength::FifteenMinutes => FIFTEEN_MIN_MS,
         Timelength::ThirtyMinutes => THIRTY_MIN_MS,
         Timelength::OneHour => ONE_HOUR_MS,
+        Timelength::TwoHours => TWO_HOUR_MS,
         Timelength::SixHours => SIX_HOURS_MS,
         Timelength::EightHours => EIGHT_HOURS_MS,
         Timelength::TwelveHours => TWELVE_HOURS_MS,
