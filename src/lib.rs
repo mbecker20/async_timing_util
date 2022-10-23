@@ -36,6 +36,10 @@ pub enum Timelength {
     ThreeDay,
     #[serde(rename = "1-wk")]
     OneWeek,
+    #[serde(rename = "2-wk")]
+    TwoWeeks,
+    #[serde(rename = "30-day")]
+    ThirtyDays,
 }
 
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
@@ -53,6 +57,8 @@ pub const TWELVE_HOURS_MS: u128 = ONE_HOUR_MS * 12;
 pub const ONE_DAY_MS: u128 = ONE_HOUR_MS * 24;
 pub const THREE_DAY_MS: u128 = ONE_DAY_MS * 3;
 pub const ONE_WEEK_MS: u128 = ONE_DAY_MS * 7;
+pub const TWO_WEEKS_MS: u128 = ONE_DAY_MS * 14;
+pub const THIRTY_DAYS_MS: u128 = ONE_DAY_MS * 30;
 
 pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
     match timelength {
@@ -71,6 +77,8 @@ pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
         Timelength::OneDay => ONE_DAY_MS,
         Timelength::ThreeDay => THREE_DAY_MS,
         Timelength::OneWeek => ONE_WEEK_MS,
+        Timelength::TwoWeeks => TWO_WEEKS_MS,
+        Timelength::ThirtyDays => THIRTY_DAYS_MS,
     }
 }
 
