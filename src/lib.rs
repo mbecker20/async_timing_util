@@ -6,6 +6,12 @@ use strum_macros::{Display, EnumString};
 #[serde(rename_all = "snake_case")]
 #[strum(serialize_all = "snake_case")]
 pub enum Timelength {
+    #[serde(rename = "1-sec")]
+    OneSecond,
+    #[serde(rename = "5-sec")]
+    FiveSeconds,
+    #[serde(rename = "10-sec")]
+    TenSeconds,
     #[serde(rename = "30-sec")]
     ThirtySeconds,
     #[serde(rename = "1-min")]
@@ -42,6 +48,9 @@ pub enum Timelength {
     ThirtyDays,
 }
 
+pub const ONE_SECOND_MS: u128 = 1000;
+pub const FIVE_SECONDS_MS: u128 = 1000 * 5;
+pub const TEN_SECONDS_MS: u128 = 1000 * 10;
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
 pub const TWO_MIN_MS: u128 = 1000 * 120;
@@ -62,6 +71,9 @@ pub const THIRTY_DAYS_MS: u128 = ONE_DAY_MS * 30;
 
 pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
     match timelength {
+        Timelength::OneSecond => ONE_SECOND_MS,
+        Timelength::FiveSeconds => FIVE_SECONDS_MS,
+        Timelength::TenSeconds => TEN_SECONDS_MS,
         Timelength::ThirtySeconds => THIRTY_SECONDS_MS,
         Timelength::OneMinute => ONE_MIN_MS,
         Timelength::TwoMinutes => TWO_MIN_MS,
