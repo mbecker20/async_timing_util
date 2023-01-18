@@ -134,7 +134,12 @@ pub async fn wait_until(target_ts_ms: u128) -> u128 {
 pub async fn wait_until_timelength(timelength: Timelength, additional_ms: u128) -> u128 {
     let ts = unix_timestamp_ms();
     let timelength = get_timelength_in_ms(timelength);
-    let time_to_wait = timelength - ts % timelength + additional_ms;
+    let time_after = ts % timelength;
+    let time_to_wait = if time_after < additional_ms {
+        additional_ms - time_after
+    } else {
+        timelength - time_after + additional_ms
+    };
     tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
     ts + time_to_wait
 }
