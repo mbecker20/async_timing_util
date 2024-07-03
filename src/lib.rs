@@ -1,74 +1,122 @@
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use serde_derive::{Serialize, Deserialize};
-use strum_macros::{Display, EnumString};
+//! # Async Timing Util
+//! 
+//! Convenient utilities for doing repeated tasks at precise intervals.
+//! 
+//! ```
+//! use async_timing_util::{Timelength, wait_until_timelength};
+//! 
+//! loop {
+//!     let ts = wait_until_timelength(Timelength::OneHour).await;
+//!     /// Do something async every hour, on the hour
+//!     /// Runs at 00:00, 01:00, 02:00, etc.
+//! }
+//! ```
 
-#[derive(Serialize, Deserialize, Debug, Display, EnumString, PartialEq, Hash, Eq, Clone, Copy)]
+use serde_derive::{Deserialize, Serialize};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use strum_macros::{AsRefStr, Display, EnumString, IntoStaticStr};
+
+/// Represents various standard lengths of time.
+#[derive(
+  Serialize,
+  Deserialize,
+  Debug,
+  Display,
+  EnumString,
+  AsRefStr,
+  IntoStaticStr,
+  PartialEq,
+  Hash,
+  Eq,
+  Clone,
+  Copy,
+)]
 #[serde(rename_all = "snake_case")]
 #[strum(serialize_all = "snake_case")]
 pub enum Timelength {
-    #[serde(rename = "1-sec")]
-    #[strum(serialize = "1-sec")]
-    OneSecond,
-    #[serde(rename = "5-sec")]
-    #[strum(serialize = "5-sec")]
-    FiveSeconds,
-    #[serde(rename = "10-sec")]
-    #[strum(serialize = "10-sec")]
-    TenSeconds,
-    #[serde(rename = "15-sec")]
-    #[strum(serialize = "15-sec")]
-    FifteenSeconds,
-    #[serde(rename = "30-sec")]
-    #[strum(serialize = "30-sec")]
-    ThirtySeconds,
-    #[serde(rename = "1-min")]
-    #[strum(serialize = "1-min")]
-    OneMinute,
-    #[serde(rename = "2-min")]
-    #[strum(serialize = "2-min")]
-    TwoMinutes,
-    #[serde(rename = "5-min")]
-    #[strum(serialize = "5-min")]
-    FiveMinutes,
-    #[serde(rename = "10-min")]
-    #[strum(serialize = "10-min")]
-    TenMinutes,
-    #[serde(rename = "15-min")]
-    #[strum(serialize = "15-min")]
-    FifteenMinutes,
-    #[serde(rename = "30-min")]
-    #[strum(serialize = "30-min")]
-    ThirtyMinutes,
-    #[serde(rename = "1-hr")]
-    #[strum(serialize = "1-hr")]
-    OneHour,
-    #[serde(rename = "2-hr")]
-    #[strum(serialize = "2-hr")]
-    TwoHours,
-    #[serde(rename = "6-hr")]
-    #[strum(serialize = "6-hr")]
-    SixHours,
-    #[serde(rename = "8-hr")]
-    #[strum(serialize = "8-hr")]
-    EightHours,
-    #[serde(rename = "12-hr")]
-    #[strum(serialize = "12-hr")]
-    TwelveHours,
-    #[serde(rename = "1-day")]
-    #[strum(serialize = "1-day")]
-    OneDay,
-    #[serde(rename = "3-day")]
-    #[strum(serialize = "3-day")]
-    ThreeDay,
-    #[serde(rename = "1-wk")]
-    #[strum(serialize = "1-wk")]
-    OneWeek,
-    #[serde(rename = "2-wk")]
-    #[strum(serialize = "2-wk")]
-    TwoWeeks,
-    #[serde(rename = "30-day")]
-    #[strum(serialize = "30-day")]
-    ThirtyDays,
+  #[serde(rename = "1-sec")]
+  #[strum(serialize = "1-sec")]
+  OneSecond,
+
+  #[serde(rename = "5-sec")]
+  #[strum(serialize = "5-sec")]
+  FiveSeconds,
+
+  #[serde(rename = "10-sec")]
+  #[strum(serialize = "10-sec")]
+  TenSeconds,
+
+  #[serde(rename = "15-sec")]
+  #[strum(serialize = "15-sec")]
+  FifteenSeconds,
+
+  #[serde(rename = "30-sec")]
+  #[strum(serialize = "30-sec")]
+  ThirtySeconds,
+
+  #[serde(rename = "1-min")]
+  #[strum(serialize = "1-min")]
+  OneMinute,
+
+  #[serde(rename = "2-min")]
+  #[strum(serialize = "2-min")]
+  TwoMinutes,
+
+  #[serde(rename = "5-min")]
+  #[strum(serialize = "5-min")]
+  FiveMinutes,
+
+  #[serde(rename = "10-min")]
+  #[strum(serialize = "10-min")]
+  TenMinutes,
+
+  #[serde(rename = "15-min")]
+  #[strum(serialize = "15-min")]
+  FifteenMinutes,
+
+  #[serde(rename = "30-min")]
+  #[strum(serialize = "30-min")]
+  ThirtyMinutes,
+
+  #[serde(rename = "1-hr")]
+  #[strum(serialize = "1-hr")]
+  OneHour,
+
+  #[serde(rename = "2-hr")]
+  #[strum(serialize = "2-hr")]
+  TwoHours,
+
+  #[serde(rename = "6-hr")]
+  #[strum(serialize = "6-hr")]
+  SixHours,
+
+  #[serde(rename = "8-hr")]
+  #[strum(serialize = "8-hr")]
+  EightHours,
+
+  #[serde(rename = "12-hr")]
+  #[strum(serialize = "12-hr")]
+  TwelveHours,
+
+  #[serde(rename = "1-day")]
+  #[strum(serialize = "1-day")]
+  OneDay,
+
+  #[serde(rename = "3-day")]
+  #[strum(serialize = "3-day")]
+  ThreeDay,
+
+  #[serde(rename = "1-wk")]
+  #[strum(serialize = "1-wk")]
+  OneWeek,
+
+  #[serde(rename = "2-wk")]
+  #[strum(serialize = "2-wk")]
+  TwoWeeks,
+
+  #[serde(rename = "30-day")]
+  #[strum(serialize = "30-day")]
+  ThirtyDays,
 }
 
 pub const ONE_SECOND_MS: u128 = 1000;
@@ -93,65 +141,75 @@ pub const ONE_WEEK_MS: u128 = ONE_DAY_MS * 7;
 pub const TWO_WEEKS_MS: u128 = ONE_DAY_MS * 14;
 pub const THIRTY_DAYS_MS: u128 = ONE_DAY_MS * 30;
 
+/// Converts a timelength into milliseconds.
 pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
-    match timelength {
-        Timelength::OneSecond => ONE_SECOND_MS,
-        Timelength::FiveSeconds => FIVE_SECONDS_MS,
-        Timelength::TenSeconds => TEN_SECONDS_MS,
-        Timelength::FifteenSeconds => FIFTEEN_SECONDS_MS,
-        Timelength::ThirtySeconds => THIRTY_SECONDS_MS,
-        Timelength::OneMinute => ONE_MIN_MS,
-        Timelength::TwoMinutes => TWO_MIN_MS,
-        Timelength::FiveMinutes => FIVE_MIN_MS,
-        Timelength::TenMinutes => TEN_MIN_MS,
-        Timelength::FifteenMinutes => FIFTEEN_MIN_MS,
-        Timelength::ThirtyMinutes => THIRTY_MIN_MS,
-        Timelength::OneHour => ONE_HOUR_MS,
-        Timelength::TwoHours => TWO_HOUR_MS,
-        Timelength::SixHours => SIX_HOURS_MS,
-        Timelength::EightHours => EIGHT_HOURS_MS,
-        Timelength::TwelveHours => TWELVE_HOURS_MS,
-        Timelength::OneDay => ONE_DAY_MS,
-        Timelength::ThreeDay => THREE_DAY_MS,
-        Timelength::OneWeek => ONE_WEEK_MS,
-        Timelength::TwoWeeks => TWO_WEEKS_MS,
-        Timelength::ThirtyDays => THIRTY_DAYS_MS,
-    }
+  match timelength {
+    Timelength::OneSecond => ONE_SECOND_MS,
+    Timelength::FiveSeconds => FIVE_SECONDS_MS,
+    Timelength::TenSeconds => TEN_SECONDS_MS,
+    Timelength::FifteenSeconds => FIFTEEN_SECONDS_MS,
+    Timelength::ThirtySeconds => THIRTY_SECONDS_MS,
+    Timelength::OneMinute => ONE_MIN_MS,
+    Timelength::TwoMinutes => TWO_MIN_MS,
+    Timelength::FiveMinutes => FIVE_MIN_MS,
+    Timelength::TenMinutes => TEN_MIN_MS,
+    Timelength::FifteenMinutes => FIFTEEN_MIN_MS,
+    Timelength::ThirtyMinutes => THIRTY_MIN_MS,
+    Timelength::OneHour => ONE_HOUR_MS,
+    Timelength::TwoHours => TWO_HOUR_MS,
+    Timelength::SixHours => SIX_HOURS_MS,
+    Timelength::EightHours => EIGHT_HOURS_MS,
+    Timelength::TwelveHours => TWELVE_HOURS_MS,
+    Timelength::OneDay => ONE_DAY_MS,
+    Timelength::ThreeDay => THREE_DAY_MS,
+    Timelength::OneWeek => ONE_WEEK_MS,
+    Timelength::TwoWeeks => TWO_WEEKS_MS,
+    Timelength::ThirtyDays => THIRTY_DAYS_MS,
+  }
 }
 
+/// Gets the system time in unix milliseconds.
+/// Panics if [SystemTime::duration_since] returns an error.
 pub fn unix_timestamp_ms() -> u128 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_millis()
+  SystemTime::now()
+    .duration_since(UNIX_EPOCH)
+    .unwrap()
+    .as_millis()
 }
 
+/// Sleeps until the target unix time. Panics if the target time is before the current time.
 pub async fn wait_until(target_ts_ms: u128) -> u128 {
-    let ts = unix_timestamp_ms();
-    if target_ts_ms < ts {
-        panic!("provided target ts is before the current time");
-    }
-    let time_to_wait = target_ts_ms - ts;
-    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
-    ts + time_to_wait
+  let ts = unix_timestamp_ms();
+  if target_ts_ms < ts {
+    panic!("provided target ts is before the current time");
+  }
+  let time_to_wait = target_ts_ms - ts;
+  tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+  ts + time_to_wait
 }
 
+/// Waits until the next even instance of the timelength. For example, Timelength::OneHour will wait
+/// until the next hour, eg 01:00, 02:00, plus the "additional_ms".
 pub async fn wait_until_timelength(timelength: Timelength, additional_ms: u128) -> u128 {
-    let ts = unix_timestamp_ms();
-    let timelength = get_timelength_in_ms(timelength);
-    let time_after = ts % timelength;
-    let time_to_wait = if time_after < additional_ms {
-        additional_ms - time_after
-    } else {
-        timelength - time_after + additional_ms
-    };
-    tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
-    ts + time_to_wait
+  let ts = unix_timestamp_ms();
+  let timelength = get_timelength_in_ms(timelength);
+  let time_after = ts % timelength;
+  let time_to_wait = if time_after < additional_ms {
+    additional_ms - time_after
+  } else {
+    timelength - time_after + additional_ms
+  };
+  tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
+  ts + time_to_wait
 }
 
+/// Gets the most recent complete interval of a given timelength.
+///
+/// For example, passing Timelength::OneHour and calling this at 03:12 will return
+/// the period from (02:00, 03:00).
 pub fn last_timelength_interval(timelength: Timelength) -> (u128, u128) {
-    let ts = unix_timestamp_ms();
-    let timelength = get_timelength_in_ms(timelength);
-    let end = ts - ts % timelength;
-    (end - timelength, end)
+  let ts = unix_timestamp_ms();
+  let timelength = get_timelength_in_ms(timelength);
+  let end = ts - ts % timelength;
+  (end - timelength, end)
 }
