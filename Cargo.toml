@@ -1,15 +1,15 @@
 [package]
 name = "async_timing_util"
-version = "1.0.0"
-edition = "2021"
+version = "1.1.0"
+edition = "2024"
 description = "tokio async functions for waiting until even intervals (on 1 min, 5 min, 30 min, etc), or waiting until a specified timestamp"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.38", features = ["time"] }
-strum = "0.26"
-strum_macros = "0.26"
-serde = "1.0"
-serde_derive = "1.0"
+tokio = { version = "1", features = ["time"] }
+strum = "0"
+strum_macros = "0"
+serde = "1"
+serde_derive = "1"

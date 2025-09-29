@@ -1,10 +1,10 @@
 //! # Async Timing Util
-//! 
+//!
 //! Convenient utilities for doing repeated tasks at precise intervals.
-//! 
+//!
 //! ```
 //! use async_timing_util::{Timelength, wait_until_timelength};
-//! 
+//!
 //! loop {
 //!     let ts = wait_until_timelength(Timelength::OneHour).await;
 //!     /// Do something async every hour, on the hour
@@ -38,6 +38,14 @@ pub enum Timelength {
   #[strum(serialize = "1-sec")]
   OneSecond,
 
+  #[serde(rename = "2-sec")]
+  #[strum(serialize = "2-sec")]
+  TwoSeconds,
+
+  #[serde(rename = "3-sec")]
+  #[strum(serialize = "3-sec")]
+  ThreeSeconds,
+
   #[serde(rename = "5-sec")]
   #[strum(serialize = "5-sec")]
   FiveSeconds,
@@ -61,6 +69,10 @@ pub enum Timelength {
   #[serde(rename = "2-min")]
   #[strum(serialize = "2-min")]
   TwoMinutes,
+
+  #[serde(rename = "3-min")]
+  #[strum(serialize = "3-min")]
+  ThreeMinutes,
 
   #[serde(rename = "5-min")]
   #[strum(serialize = "5-min")]
@@ -86,6 +98,10 @@ pub enum Timelength {
   #[strum(serialize = "2-hr")]
   TwoHours,
 
+  #[serde(rename = "3-hr")]
+  #[strum(serialize = "3-hr")]
+  ThreeHours,
+
   #[serde(rename = "6-hr")]
   #[strum(serialize = "6-hr")]
   SixHours,
@@ -102,9 +118,13 @@ pub enum Timelength {
   #[strum(serialize = "1-day")]
   OneDay,
 
+  #[serde(rename = "2-day")]
+  #[strum(serialize = "2-day")]
+  TwoDays,
+
   #[serde(rename = "3-day")]
   #[strum(serialize = "3-day")]
-  ThreeDay,
+  ThreeDays,
 
   #[serde(rename = "1-wk")]
   #[strum(serialize = "1-wk")]
@@ -120,23 +140,28 @@ pub enum Timelength {
 }
 
 pub const ONE_SECOND_MS: u128 = 1000;
+pub const TWO_SECONDS_MS: u128 = 1000 * 2;
+pub const THREE_SECONDS_MS: u128 = 1000 * 3;
 pub const FIVE_SECONDS_MS: u128 = 1000 * 5;
 pub const TEN_SECONDS_MS: u128 = 1000 * 10;
 pub const FIFTEEN_SECONDS_MS: u128 = 1000 * 15;
 pub const THIRTY_SECONDS_MS: u128 = 1000 * 30;
 pub const ONE_MIN_MS: u128 = 1000 * 60;
-pub const TWO_MIN_MS: u128 = 1000 * 120;
-pub const FIVE_MIN_MS: u128 = ONE_MIN_MS * 5;
-pub const TEN_MIN_MS: u128 = ONE_MIN_MS * 10;
-pub const FIFTEEN_MIN_MS: u128 = ONE_MIN_MS * 15;
-pub const THIRTY_MIN_MS: u128 = ONE_MIN_MS * 30;
+pub const TWO_MINS_MS: u128 = ONE_MIN_MS * 2;
+pub const THREE_MINS_MS: u128 = ONE_MIN_MS * 3;
+pub const FIVE_MINS_MS: u128 = ONE_MIN_MS * 5;
+pub const TEN_MINS_MS: u128 = ONE_MIN_MS * 10;
+pub const FIFTEEN_MINS_MS: u128 = ONE_MIN_MS * 15;
+pub const THIRTY_MINS_MS: u128 = ONE_MIN_MS * 30;
 pub const ONE_HOUR_MS: u128 = ONE_MIN_MS * 60;
-pub const TWO_HOUR_MS: u128 = ONE_HOUR_MS * 2;
+pub const TWO_HOURS_MS: u128 = ONE_HOUR_MS * 2;
+pub const THREE_HOURS_MS: u128 = ONE_HOUR_MS * 3;
 pub const SIX_HOURS_MS: u128 = ONE_HOUR_MS * 6;
 pub const EIGHT_HOURS_MS: u128 = ONE_HOUR_MS * 8;
 pub const TWELVE_HOURS_MS: u128 = ONE_HOUR_MS * 12;
 pub const ONE_DAY_MS: u128 = ONE_HOUR_MS * 24;
-pub const THREE_DAY_MS: u128 = ONE_DAY_MS * 3;
+pub const TWO_DAYS_MS: u128 = ONE_DAY_MS * 2;
+pub const THREE_DAYS_MS: u128 = ONE_DAY_MS * 3;
 pub const ONE_WEEK_MS: u128 = ONE_DAY_MS * 7;
 pub const TWO_WEEKS_MS: u128 = ONE_DAY_MS * 14;
 pub const THIRTY_DAYS_MS: u128 = ONE_DAY_MS * 30;
@@ -145,23 +170,28 @@ pub const THIRTY_DAYS_MS: u128 = ONE_DAY_MS * 30;
 pub fn get_timelength_in_ms(timelength: Timelength) -> u128 {
   match timelength {
     Timelength::OneSecond => ONE_SECOND_MS,
+    Timelength::TwoSeconds => TWO_SECONDS_MS,
+    Timelength::ThreeSeconds => THREE_SECONDS_MS,
     Timelength::FiveSeconds => FIVE_SECONDS_MS,
     Timelength::TenSeconds => TEN_SECONDS_MS,
     Timelength::FifteenSeconds => FIFTEEN_SECONDS_MS,
     Timelength::ThirtySeconds => THIRTY_SECONDS_MS,
     Timelength::OneMinute => ONE_MIN_MS,
-    Timelength::TwoMinutes => TWO_MIN_MS,
-    Timelength::FiveMinutes => FIVE_MIN_MS,
-    Timelength::TenMinutes => TEN_MIN_MS,
-    Timelength::FifteenMinutes => FIFTEEN_MIN_MS,
-    Timelength::ThirtyMinutes => THIRTY_MIN_MS,
+    Timelength::TwoMinutes => TWO_MINS_MS,
+    Timelength::ThreeMinutes => THREE_MINS_MS,
+    Timelength::FiveMinutes => FIVE_MINS_MS,
+    Timelength::TenMinutes => TEN_MINS_MS,
+    Timelength::FifteenMinutes => FIFTEEN_MINS_MS,
+    Timelength::ThirtyMinutes => THIRTY_MINS_MS,
     Timelength::OneHour => ONE_HOUR_MS,
-    Timelength::TwoHours => TWO_HOUR_MS,
+    Timelength::TwoHours => TWO_HOURS_MS,
+    Timelength::ThreeHours => THREE_HOURS_MS,
     Timelength::SixHours => SIX_HOURS_MS,
     Timelength::EightHours => EIGHT_HOURS_MS,
     Timelength::TwelveHours => TWELVE_HOURS_MS,
     Timelength::OneDay => ONE_DAY_MS,
-    Timelength::ThreeDay => THREE_DAY_MS,
+    Timelength::TwoDays => TWO_DAYS_MS,
+    Timelength::ThreeDays => THREE_DAYS_MS,
     Timelength::OneWeek => ONE_WEEK_MS,
     Timelength::TwoWeeks => TWO_WEEKS_MS,
     Timelength::ThirtyDays => THIRTY_DAYS_MS,
@@ -177,11 +207,11 @@ pub fn unix_timestamp_ms() -> u128 {
     .as_millis()
 }
 
-/// Sleeps until the target unix time. Panics if the target time is before the current time.
+/// Sleeps until the target unix time. Returns current time if the target time is before the current time.
 pub async fn wait_until(target_ts_ms: u128) -> u128 {
   let ts = unix_timestamp_ms();
   if target_ts_ms < ts {
-    panic!("provided target ts is before the current time");
+    return ts;
   }
   let time_to_wait = target_ts_ms - ts;
   tokio::time::sleep(Duration::from_millis(time_to_wait as u64)).await;
